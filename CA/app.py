@@ -54,10 +54,10 @@ wsgi_app = app.wsgi_app
 
 
 @app.route('/')
-@app.route('/hello/')
-@app.route('/hello/<name>')
+@app.route('/index/')
+@app.route('/index/<name>')
 def hello(name=None):
-    return render_template('hello.html', name=name)
+    return render_template('index.html', name=name)
 
 if __name__ == '__main__':
     import os
