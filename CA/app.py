@@ -13,10 +13,10 @@ app = Flask(__name__)
 CORS(app)
 # My SQL Instance configurations
 # Change the HOST IP and Password to match your instance configurations
-app.config['MYSQL_USER'] = 'web'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'cadb'
-app.config['MYSQL_HOST'] = 'localhost' #for now
+app.config['MYSQL_USER'] = 'kjdb'
+app.config['MYSQL_PASSWORD'] = 'Karolinadb123!'
+app.config['MYSQL_DB'] = 'ca'
+app.config['MYSQL_HOST'] = 'kjdb.mysql.database.azure.com' #for now
 mysql.init_app(app)
 
 #@app.route("/add") #Add Student
