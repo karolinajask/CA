@@ -35,11 +35,15 @@
     <Content Include="schema.sql" />
     <Content Include="static\script.js" />
     <Content Include="static\style.css" />
-    <Content Include="templates\index.html" />
+    <Content Include="templates\base.html" />
+    <Content Include="templates\home.html" />
+    <Content Include="templates\auth\login.html" />
+    <Content Include="templates\auth\register.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="static\" />
     <Folder Include="templates\" />
+    <Folder Include="templates\auth\" />
   </ItemGroup>
   <ItemGroup>
     <Interpreter Include="env\">

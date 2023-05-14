@@ -4,10 +4,11 @@ It contains the definition of routes and views for the application.
 """
 
 from flask import Flask, render_template
-from flask import request
+from flask import request, current_app, g, session, flash, redirect, render_template, url_for
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 import json
+from werkzeug.security import check_password_hash, generate_password_hash
 mysql = MySQL()
 app = Flask(__name__)
 CORS(app)
@@ -17,54 +18,92 @@ app.config['MYSQL_USER'] = 'kjdb'
 app.config['MYSQL_PASSWORD'] = 'Karolinadb123!'
 app.config['MYSQL_DB'] = 'ca'
 app.config['MYSQL_HOST'] = 'kjdb.mysql.database.azure.com' #for now
+app.config['SECRET_KEY'] = "GDtfD^&$%@^8tgYjD"
 mysql.init_app(app)
 
-#@app.route("/add") #Add Student
-#def add():
-#  name = request.args.get('name')
-#  email = request.args.get('email')
-#  cur = mysql.connection.cursor() #create a connection to the SQL instance
-#  s='''INSERT INTO students(studentName, email) VALUES('{}','{}');'''.format(name,email)
-#  cur.execute(s)
-#  mysql.connection.commit()
+@app.route("/")
+def index():
+    return render_template('base.html')
 
-#  return '{"Result":"Success"}'
-#@app.route("/") #Default - Show Data
-#def hello(): # Name of the method
-#  cur = mysql.connection.cursor() #create a connection to the SQL instance
-#  cur.execute('''SELECT * FROM students''') # execute an SQL statment
-#  rv = cur.fetchall() #Retreive all rows returend by the SQL statment
-#  Results=[]
-#  for row in rv: #Format the Output Results and add to return string
-#    Result={}
-#    Result['Name']=row[0].replace('\n',' ')
-#    Result['Email']=row[1]
-#    Result['ID']=row[2]
-#    Results.append(Result)
-#  response={'Results':Results, 'count':len(Results)}
-#  ret=app.response_class(
-#    response=json.dumps(response),
-#    status=200,
-#    mimetype='application/json'
-#  )
-#  return ret #Return the data in a string format
+@app.route('/register', methods=('GET', 'POST'))
+def register():    	
+    if request.method == 'POST':
+        useremail = request.form['useremail']
+        password = request.form['password']
+        userfirstname = request.form['userfirstname']
+        userlastname = request.form['userlastname']
+        cur = mysql.connection.cursor()   
+        error = None
 
-# Make the WSGI interface available at the top level so wfastcgi can get it.
-wsgi_app = app.wsgi_app
+        if not useremail:
+            error = 'User email is required.'
+        if not password:
+            error = 'Password is required.'
+        if not userfirstname:
+            error = 'User First Name is required.'
+        elif not userlastname:
+            error = 'User Last Name is required.'
+
+        if error is None:
+            try:
+                cur.execute(
+                    "INSERT INTO User (UserEmail, UserPassword, UserFirstName, UserLastName) VALUES (%s, %s, %s, %s)",
+                    (useremail, generate_password_hash(password),userfirstname, userlastname),
+                )
+                mysql.connection.commit()
+            except:
+                cur.execute("SELECT * FROM User WHERE UserEmail = %s", [useremail])
+                error = f"Email {useremail} is already registered."
+            else:
+                return redirect(url_for("login"))
+        flash(error)
+
+    return render_template('auth/register.html')
+
+################################
+
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    if request.method == 'POST':
+        useremail = request.form['useremail']
+        password = request.form['password']
+        cur = mysql.connection.cursor()
+        error = None
+        user = cur.execute(
+            'SELECT * FROM user WHERE UserEmail = %s', (useremail,)
+        ).fetchone()
+
+        if useremail is None:
+            error = 'Incorrect User Email.'
+        elif not check_password_hash(user['password'], password):
+            error = 'Incorrect password.'
+
+        if error is None:
+            session.clear()
+            session['user_id'] = user['id']
+            return redirect(url_for('index'))
+
+        flash(error)
+
+    return render_template('auth/login.html')
 
 
-@app.route('/')
-@app.route('/index/')
-@app.route('/index/<name>')
-def hello(name=None):
-    return render_template('index.html', name=name)
+@app.before_request
+def load_logged_in_user():
+    useremail = session.get('useremail')
+
+    if useremail is None:
+        g.user = None
+    else:
+        g.user =  cur.execute(
+            'SELECT * FROM user WHERE UserEmail = ?', (usermemail,)
+        ).fetchone()
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
 
 if __name__ == '__main__':
-    import os
-    HOST = os.environ.get('SERVER_HOST', 'localhost')
-    try:
-        PORT = int(os.environ.get('SERVER_PORT', '5555'))
-    except ValueError:
-        PORT = 5555
-    app.run(HOST, PORT)
-
+    app.run(host='0.0.0.0',port='8080') #Run the flask app at port 8080
