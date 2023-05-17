@@ -69,40 +69,38 @@ def login():
         password = request.form['password']
         cur = mysql.connection.cursor()
         error = None
-        user = cur.execute(
-            'SELECT * FROM user WHERE UserEmail = %s', (useremail,)
-        ).fetchone()
+        cur.execute('select UserPassword, UserEmail from user where UserEmail = %s', [useremail]) #https://stackoverflow.com/questions/69477885/check-password-hash-is-not-working-in-flask-mysql
+        data = cur.fetchall()
+        for row in data:
+            hashed_password = ("%s" % (row[0]))
+            userid = ("%s" % (row[1]))
 
-        if useremail is None:
-            error = 'Incorrect User Email.'
-        elif not check_password_hash(user['password'], password):
-            error = 'Incorrect password.'
+        if len(data) > 0:
+            if check_password_hash(hashed_password,password):
 
-        if error is None:
-            session.clear()
-            session['user_id'] = user['id']
-            return redirect(url_for('index'))
+                return 'logged in successfully'
+                #return redirect(url_for('home'))
 
         flash(error)
 
     return render_template('auth/login.html')
 
 
-@app.before_request
-def load_logged_in_user():
-    useremail = session.get('useremail')
-
-    if useremail is None:
-        g.user = None
-    else:
-        g.user =  cur.execute(
-            'SELECT * FROM user WHERE UserEmail = ?', (usermemail,)
-        ).fetchone()
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return redirect(url_for('index'))
+#@app.before_request
+#def load_logged_in_user():
+#    useremail = session.get('useremail')
+#
+ #   if useremail is None:
+  #      g.user = None
+   # else:
+    #    g.user =  cur.execute(
+     #       'SELECT * FROM user WHERE UserEmail = ?', (usermemail,)
+      #  ).fetchone()
+      #
+#@app.route('/logout')
+#def logout():
+ #   session.clear()
+  #  return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
