@@ -3,7 +3,7 @@ This script runs the application using a development server.
 It contains the definition of routes and views for the application.
 """
 
-from flask import Flask, render_template
+from flask import Flask
 from flask import request, current_app, g, session, flash, redirect, render_template, url_for
 from flask_mysqldb import MySQL
 from flask_cors import CORS
@@ -69,6 +69,12 @@ def login():
         password = request.form['password']
         cur = mysql.connection.cursor()
         error = None
+        cur.execute('select UserEmail from user where UserEmail = %s', [useremail])
+        p = cur.fetchone()
+
+        if p is None:
+            error = 'Incorrect username.'
+
         cur.execute('select UserPassword, UserEmail from user where UserEmail = %s', [useremail]) #https://stackoverflow.com/questions/69477885/check-password-hash-is-not-working-in-flask-mysql
         data = cur.fetchall()
         for row in data:
@@ -78,29 +84,40 @@ def login():
         if len(data) > 0:
             if check_password_hash(hashed_password,password):
 
-                return 'logged in successfully'
-                #return redirect(url_for('home'))
+                #return 'logged in successfully'
+                
+                session.clear()
+                session['user_id'] = p[0]
+                return redirect(url_for("home"))
+
+            else:
+                error = 'Incorrect password.'
 
         flash(error)
 
     return render_template('auth/login.html')
 
+@app.route("/home")
+def home():
+    return render_template('auth/home.html')
 
-#@app.before_request
-#def load_logged_in_user():
-#    useremail = session.get('useremail')
-#
- #   if useremail is None:
-  #      g.user = None
-   # else:
-    #    g.user =  cur.execute(
-     #       'SELECT * FROM user WHERE UserEmail = ?', (usermemail,)
-      #  ).fetchone()
-      #
-#@app.route('/logout')
-#def logout():
- #   session.clear()
-  #  return redirect(url_for('index'))
+@app.before_request
+def load_logged_in_user():
+    cur = mysql.connection.cursor()
+    user_id = session.get('user_id')
+
+    if user_id is None:
+        g.user = None
+    else:
+        cur.execute(
+            'SELECT UserEmail FROM user WHERE UserEmail = %s', (user_id,)
+        )
+        g.user = cur.fetchone()
+      
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
