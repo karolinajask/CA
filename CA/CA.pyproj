@@ -41,6 +41,7 @@
     <Content Include="templates\auth\home.html" />
     <Content Include="templates\auth\login.html" />
     <Content Include="templates\auth\register.html" />
+    <Content Include="templates\index.html" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="static\" />

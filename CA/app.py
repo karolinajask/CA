@@ -6,6 +6,7 @@ import functools
 from flask import Flask
 from flask import request, current_app, g, session, flash, redirect, render_template, url_for
 from flask_mysqldb import MySQL
+import MySQLdb.cursors
 from flask_cors import CORS
 import json
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -21,9 +22,20 @@ app.config['MYSQL_HOST'] = 'kjdb.mysql.database.azure.com' #for now
 app.config['SECRET_KEY'] = "GDtfD^&$%@^8tgYjD"
 mysql.init_app(app)
 
-@app.route("/")
+
+@app.route('/', methods=('GET','POST'))
 def index():
-    return render_template('base.html')
+    #creating variable for connection
+    conn = mysql.connection
+    cur = conn.cursor(MySQLdb.cursors.DictCursor) 
+    #executing query
+    cur.execute("select AdDate, Wanted, Price, Used, CarModel, CarColour from Ad")
+    #fetching all records from database
+    data=cur.fetchall()
+    #returning back to projectlist.html with all records from MySQL which are stored in variable data
+    return render_template("index.html",data=data)
+
+
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():    	
@@ -183,15 +195,6 @@ def create():
                         ("y", carid, user_id, price, carused, carmodel, carcolour),
                     )
                 conn.commit()
-
-
-
-            #except:
-             #   cur.execute("SELECT CarId FROM car WHERE CarId = %s", [carid])
-              #  x = cur.fetchone()
-               # if x is not None:
-                #    error = f"Car of serial number {carid} is already registered. Did you mean to update your ad?"
-
 
             finally:
                 return redirect(url_for('home'))
