@@ -12,14 +12,6 @@ RoleName varchar(50) NOT NULL,
 PRIMARY KEY (RoleId)
 );
 
-CREATE TABLE Car (
-CarId varchar(10) NOT NULL,
-Used char(1) NOT NULL,
-CarModel varchar(50),
-CarColour varchar(50),
-PRIMARY KEY (CarId)
-);
-
 CREATE TABLE User (
 UserEmail varchar(100) NOT NULL,
 UserFirstName varchar(40),
@@ -37,7 +29,9 @@ Wanted char(1),
 CarID varchar(10),
 PosterID varchar(100),
 Price decimal,
-FOREIGN KEY (CarId) REFERENCES Car (CarId),
+Used char(1) NOT NULL,
+CarModel varchar(50),
+CarColour varchar(50),
 FOREIGN KEY (PosterId) REFERENCES User (UserEmail)
 );
 

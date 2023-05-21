@@ -35,7 +35,7 @@ def register():
         userrole = request.form['userrole']
         #cur = mysql.connection.cursor()
         conn = mysql.connection
-        cursor = conn.cursor()  
+        cur = conn.cursor()  
         error = None
 
         if not useremail:
@@ -151,36 +151,37 @@ def create():
         error = None
                 
 
-        cur.execute("SELECT CarId FROM car WHERE CarId = %s", [carid])
+        cur.execute("SELECT CarID FROM ad WHERE CarID = %s", [carid])
         x = cur.fetchone()
         if x is not None:
             error = f"Car of serial number {carid} is already registered. Did you mean to update your ad?"
 
         if error is None:
+
+            cur.execute("SELECT RoleId FROM user WHERE UserEmail = %s", [user_id])
+            u = cur.fetchone()
+            usrole = str(u[0])
+            print(usrole)
+
             try:
+                           
 
-                if usrole != "buyer":
+                if usrole == "seller":
                     print(usrole)
-
-                    cur.execute(
-                        "INSERT INTO Car (CarId, Used, CarModel, CarColour) VALUES (%s, %s, %s, %s)",
-                        (carid, carused, carmodel, carcolour),
-                        "INSERT INTO Ad (Wanted, CarID, PosterID, Price) VALUES (%s, %s, %s, %d)",
-                        ("n", carid, user_id, price)
+                    cur.execute(                        
+                        "INSERT INTO Ad (Wanted, CarID, PosterID, Price,Used, CarModel,CarColour) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        ("n", carid, user_id, price, carused, carmodel, carcolour),
                     )
-                                
-
                 conn.commit()
+                
 
-                if usrole != "seller":
-                    cur.execute(
-                        "INSERT INTO Car (CarId, Used, CarModel, CarColour) VALUES (%s, %s, %s, %s)",
-                        (carid, carused, carmodel, carcolour),
-                        "INSERT INTO Ad (Wanted, CarID, PosterID, Price) VALUES (%s, %s, %s, %d)",
-                        ("y", carid, user_id, price)
+
+                if usrole == "buyer":
+                    print(usrole)
+                    cur.execute(                        
+                        "INSERT INTO Ad (Wanted, CarID, PosterID, Price,Used, CarModel,CarColour) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                        ("y", carid, user_id, price, carused, carmodel, carcolour),
                     )
-                                
-
                 conn.commit()
 
 
