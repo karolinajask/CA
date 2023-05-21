@@ -2,7 +2,7 @@
 This script runs the application using a development server.
 It contains the definition of routes and views for the application.
 """
-
+import functools
 from flask import Flask
 from flask import request, current_app, g, session, flash, redirect, render_template, url_for
 from flask_mysqldb import MySQL
@@ -32,7 +32,10 @@ def register():
         password = request.form['password']
         userfirstname = request.form['userfirstname']
         userlastname = request.form['userlastname']
-        cur = mysql.connection.cursor()   
+        userrole = request.form['userrole']
+        #cur = mysql.connection.cursor()
+        conn = mysql.connection
+        cursor = conn.cursor()  
         error = None
 
         if not useremail:
@@ -41,16 +44,18 @@ def register():
             error = 'Password is required.'
         if not userfirstname:
             error = 'User First Name is required.'
-        elif not userlastname:
+        if not userlastname:
             error = 'User Last Name is required.'
+        elif not userrole:
+            error = 'Please choose if you are a buyer or seller.'
 
         if error is None:
             try:
                 cur.execute(
-                    "INSERT INTO User (UserEmail, UserPassword, UserFirstName, UserLastName) VALUES (%s, %s, %s, %s)",
-                    (useremail, generate_password_hash(password),userfirstname, userlastname),
+                    "INSERT INTO User (UserEmail, UserPassword, UserFirstName, UserLastName, RoleId) VALUES (%s, %s, %s, %s, %s)",
+                    (useremail, generate_password_hash(password),userfirstname, userlastname, userrole),
                 )
-                mysql.connection.commit()
+                conn.commit()
             except:
                 cur.execute("SELECT * FROM User WHERE UserEmail = %s", [useremail])
                 error = f"Email {useremail} is already registered."
@@ -67,7 +72,8 @@ def login():
     if request.method == 'POST':
         useremail = request.form['useremail']
         password = request.form['password']
-        cur = mysql.connection.cursor()
+        conn = mysql.connection
+        cur = conn.cursor()
         error = None
         cur.execute('select UserEmail from user where UserEmail = %s', [useremail])
         p = cur.fetchone()
@@ -103,7 +109,8 @@ def home():
 
 @app.before_request
 def load_logged_in_user():
-    cur = mysql.connection.cursor()
+    conn = mysql.connection
+    cur = conn.cursor()
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -119,6 +126,132 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
+
+@app.route('/create', methods=('GET', 'POST'))
+@login_required
+def create():
+    user_id = session.get('user_id')
+    if request.method == 'POST':
+        carid = request.form['carid']
+        carused = request.form['carused']
+        carmodel = request.form['carmodel']
+        carcolour = request.form['carcolour']
+        price = request.form['price']
+        conn = mysql.connection
+        cur = conn.cursor()
+        error = None
+                
+
+        cur.execute("SELECT CarId FROM car WHERE CarId = %s", [carid])
+        x = cur.fetchone()
+        if x is not None:
+            error = f"Car of serial number {carid} is already registered. Did you mean to update your ad?"
+
+        if error is None:
+            try:
+
+                if usrole != "buyer":
+                    print(usrole)
+
+                    cur.execute(
+                        "INSERT INTO Car (CarId, Used, CarModel, CarColour) VALUES (%s, %s, %s, %s)",
+                        (carid, carused, carmodel, carcolour),
+                        "INSERT INTO Ad (Wanted, CarID, PosterID, Price) VALUES (%s, %s, %s, %d)",
+                        ("n", carid, user_id, price)
+                    )
+                                
+
+                conn.commit()
+
+                if usrole != "seller":
+                    cur.execute(
+                        "INSERT INTO Car (CarId, Used, CarModel, CarColour) VALUES (%s, %s, %s, %s)",
+                        (carid, carused, carmodel, carcolour),
+                        "INSERT INTO Ad (Wanted, CarID, PosterID, Price) VALUES (%s, %s, %s, %d)",
+                        ("y", carid, user_id, price)
+                    )
+                                
+
+                conn.commit()
+
+
+
+            #except:
+             #   cur.execute("SELECT CarId FROM car WHERE CarId = %s", [carid])
+              #  x = cur.fetchone()
+               # if x is not None:
+                #    error = f"Car of serial number {carid} is already registered. Did you mean to update your ad?"
+
+
+            finally:
+                return redirect(url_for('home'))
+        flash(error)           
+
+    return render_template('auth/create.html')
+
+
+#def get_post(id, check_author=True):
+ #   post = get_db().execute(
+  #      'SELECT p.id, title, body, created, author_id, username'
+   #     ' FROM post p JOIN user u ON p.author_id = u.id'
+    #    ' WHERE p.id = ?',
+     #   (id,)
+   # ).fetchone()
+
+    #if post is None:
+     #   abort(404, f"Post id {id} doesn't exist.")
+
+    #if check_author and post['author_id'] != g.user['id']:
+     #   abort(403)
+
+#    return post
+
+
+#@bp.route('/<int:id>/update', methods=('GET', 'POST'))
+#@login_required
+#def update(id):
+ #   post = get_post(id)
+
+  #  if request.method == 'POST':
+   #     title = request.form['title']
+    #    body = request.form['body']
+     #   error = None
+     #
+       # if not title:
+#            error = 'Title is required.'
+
+ #       if error is not None:
+  #          flash(error)
+   #     else:
+    #        db = get_db()
+     #       db.execute(
+      #          'UPDATE post SET title = ?, body = ?'
+       #         ' WHERE id = ?',
+        #        (title, body, id)
+         #   )
+           # db.commit()
+          #  return redirect(url_for('blog.index'))
+
+   # return render_template('blog/update.html', post=post)
+
+
+#@bp.route('/<int:id>/delete', methods=('POST',))
+#@login_required
+#def delete(id):
+#    get_post(id)
+ #   db = get_db()
+  #  db.execute('DELETE FROM post WHERE id = ?', (id,))
+   # db.commit()
+    #return redirect(url_for('blog.index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='8080') #Run the flask app at port 8080

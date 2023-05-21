@@ -14,6 +14,14 @@
     <input name="userfirstname" id="userfirstname" required>
     <label for="userlastname">User Last Name</label>
     <input name="userlastname" id="userlastname" required>
+
+    <label for="role">I am a</label>
+    <input type="radio" id="buyer" name="userrole" value="buyer" required>
+    <label for="buyer">Buyer</label><br>
+    <input type="radio" id="seller" name="userrole" value="seller" required>
+    <label for="seller">Seller</label><br>
+
+
     <input type="submit" value="Register">
 </form>
 {% endblock %}

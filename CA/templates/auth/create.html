@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<h1>{% block title %}New  Ad{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <label for="carid">Car Serial Number</label>
+    <input name="carid" id="carid" value="{{ request.form['carid'] }}" required>
+
+    <label for="carused">Is the Car used</label>
+    <input type="radio" id="usedcar" name="carused" value="Y" required>
+    <label for="carused">Yes</label><br>
+    <input type="radio" id="newcar" name="carused" value="N" required>
+    <label for="carused">No</label><br>
+
+
+    <label for="carmodel">Car Model</label>
+    <input name="carmodel" id="carmodel" value="{{ request.form['carmodel'] }}" required>
+
+    <label for="carcolour">Car Colour</label>
+    <input name="carcolour" id="carcolour" value="{{ request.form['carcolour'] }}" required>
+
+    <label for="price">Price in EUR</label>
+    <input name="price" type="number" id="price" value="{{ request.form['price'] }}" required>
+
+
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}
+
