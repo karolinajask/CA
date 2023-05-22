@@ -1,3 +1,7 @@
+CREATE SCHEMA ca ;
+
+use ca;
+
 # create tables 
 
 DROP TABLE IF EXISTS Role;
@@ -16,7 +20,7 @@ CREATE TABLE User (
 UserEmail varchar(100) NOT NULL,
 UserFirstName varchar(40),
 UserLastName varchar(50),
-UserPassword varchar(20),
+UserPassword TEXT,
 RoleId varchar(30),
 PRIMARY KEY (UserEmail),
 FOREIGN KEY (RoleId) REFERENCES Role (RoleId)

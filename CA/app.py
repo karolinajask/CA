@@ -15,10 +15,10 @@ app = Flask(__name__)
 CORS(app)
 # My SQL Instance configurations
 # Change the HOST IP and Password to match your instance configurations
-app.config['MYSQL_USER'] = 'kjdb'
-app.config['MYSQL_PASSWORD'] = 'Karolinadb123!'
+app.config['MYSQL_USER'] = 'workbenchuser'
+app.config['MYSQL_PASSWORD'] = 'karolina123!'
 app.config['MYSQL_DB'] = 'ca'
-app.config['MYSQL_HOST'] = 'kjdb.mysql.database.azure.com' #for now
+app.config['MYSQL_HOST'] = '35.228.28.162' #for now
 app.config['SECRET_KEY'] = "GDtfD^&$%@^8tgYjD"
 mysql.init_app(app)
 
@@ -87,13 +87,13 @@ def login():
         conn = mysql.connection
         cur = conn.cursor()
         error = None
-        cur.execute('select UserEmail from user where UserEmail = %s', [useremail])
+        cur.execute('select UserEmail from User where UserEmail = %s', [useremail])
         p = cur.fetchone()
 
         if p is None:
             error = 'Incorrect username.'
 
-        cur.execute('select UserPassword, UserEmail from user where UserEmail = %s', [useremail]) #https://stackoverflow.com/questions/69477885/check-password-hash-is-not-working-in-flask-mysql
+        cur.execute('select UserPassword, UserEmail from User where UserEmail = %s', [useremail]) #https://stackoverflow.com/questions/69477885/check-password-hash-is-not-working-in-flask-mysql
         data = cur.fetchall()
         for row in data:
             hashed_password = ("%s" % (row[0]))
@@ -129,7 +129,7 @@ def load_logged_in_user():
         g.user = None
     else:
         cur.execute(
-            'SELECT UserEmail FROM user WHERE UserEmail = %s', (user_id,)
+            'SELECT UserEmail FROM User WHERE UserEmail = %s', (user_id,)
         )
         g.user = cur.fetchone()
       
@@ -163,14 +163,14 @@ def create():
         error = None
                 
 
-        cur.execute("SELECT CarID FROM ad WHERE CarID = %s", [carid])
+        cur.execute("SELECT CarID FROM Ad WHERE CarID = %s", [carid])
         x = cur.fetchone()
         if x is not None:
             error = f"Car of serial number {carid} is already registered. Did you mean to update your ad?"
 
         if error is None:
 
-            cur.execute("SELECT RoleId FROM user WHERE UserEmail = %s", [user_id])
+            cur.execute("SELECT RoleId FROM User WHERE UserEmail = %s", [user_id])
             u = cur.fetchone()
             usrole = str(u[0])
             print(usrole)
