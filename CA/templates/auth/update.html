@@ -1,20 +1,34 @@
-<!--{% extends 'base.html' %}
+{% extends 'base.html' %}
 
 {% block header %}
-
+<h1>{% block title %}Edit your Ad of ID {% for item in data %} {{ item.AdId}} {% endfor %}{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title"
 
-    <label for="body">Body</label>
+<form action="{{url_for('update')}}" method="post">
 
+
+    <!--<label for="carused">Is the Car used</label>
+    <input type="radio" id="usedcar" name="carused" value="{item.Used}}" required>
+    <label for="carused">Yes</label>
+    <br>
+    <input type="radio" id="newcar" name="carused" value="{item.Used}}" required>
+    <label for="carused">No</label>
+    <br>-->
+    {% for item in data %}
+    <label for="carmodel">Car Model</label>
+    <input name="carmodel" id="carmodel" value="{{ item.CarModel }}" required>
+
+    <label for="carcolour">Car Colour</label>
+    <input name="carcolour" id="carcolour" value="{{ item.CarColour }}" required>
+
+    <label for="price">Price in EUR</label>
+    <input name="price" type="number" id="price" value="{{item.Price}}" required>
     <input type="submit" value="Save">
+    {% endfor %}
+
 </form>
 <hr>
-
-    <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-</form>
-{% endblock %}-->
+<p>delete</p>
+{% endblock %}

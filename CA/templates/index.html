@@ -13,6 +13,7 @@
         <td style="background-position:center center" valign="top" align="center">
             <table border="0" cellpadding="8" width="100%" style="background-color:#CCCCCC">
                 <tr style="background-color:navy;color:white">
+                    <td>Ad ID</td>
                     <td>Date Posted</td>
                     <td>Car Model</td>
                     <td>Price</td>
@@ -22,6 +23,7 @@
                 </tr>
                 {% for item in data %}
                 <tr>
+                    <td>{{item.AdId}}</td>
                     <td>{{item.AdDate}}</td>
                     <td>{{item.CarModel}}</td>
                     <td>{{item.Price}}</td>

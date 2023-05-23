@@ -1,32 +1,53 @@
 <!--page for logged in users-->
-
 {% extends 'base.html' %}
 
 {% block header %}
 <h1>{% block title %}Posts{% endblock %}</h1>
   {% if g.user %}
 <a class="action" href="{{ url_for('create') }}">New</a>
-<a class="action" href="{{ url_for('update') }}">My ads</a>
+<a class="action" href="{{ url_for('update') }}">Edit your ads</a>
 <a class="action" href="{{ url_for('index') }}">All ads</a>
   {% endif %}
 {% endblock %}
 
 {% block content %}
-  {% for post in posts %}
-<article class="post">
-    <header>
-        <div>
-            <h1>{{ post['title'] }}</h1>
-            <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
-        </div>
-        {% if g.user['id'] == post['author_id'] %}
-        <a class="action" href="{{ url_for('update', id=post['id']) }}">Edit</a>
-        {% endif %}
-    </header>
-    <p class="body">{{ post['body'] }}</p>
-</article>
-    {% if not loop.last %}
-<hr>
-    {% endif %}
-  {% endfor %}
+<h1>Below are ads you posted</h1>
+<!--https://www.krazyprogrammer.com/2020/12/fetch-data-from-mysql-using-flask-and.html-->
+<table border="0" style="box-shadow:1px 1px 10px white" width="70%" height="70%" align="center">
+    <tr>
+        <td style="background-position:center center" valign="top" align="center">
+            <table border="0" cellpadding="8" width="100%" style="background-color:#CCCCCC">
+                <tr style="background-color:navy;color:white">
+                    <td>Ad ID</td>
+                    <td>Date Posted</td>
+                    <td>Car Model</td>
+                    <td>Price</td>
+                    <td>Colour</td>
+                    <td>For Sale/Wanted</td>
+                    <td>Used Car</td>
+                </tr>
+                {% for item in data %}
+                <tr>
+                    <td>{{item.AdId}}</td>
+                    <td>{{item.AdDate}}</td>
+                    <td>{{item.CarModel}}</td>
+                    <td>{{item.Price}}</td>
+                    <td>{{item.CarColour}}</td>
+                    {% if item.Wanted == 'n' %}
+                    <td> For Sale </td>
+                    {% elif item.Wanted == 'y' %}
+                    <td> Wanted</td>
+                    {% endif %}
+                    {% if item.Used == 'Y' %}
+                    <td> Used </td>
+                    {% elif item.Used == 'N' %}
+                    <td> New</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+
+            </table>
+        </td>
+    </tr>
+</table>
 {% endblock %}

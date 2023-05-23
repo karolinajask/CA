@@ -8,6 +8,9 @@
         <li><span>{{ g.user['userfirstname'] }}</span>
         <li>
             <a href="{{ url_for('logout') }}">Log Out</a>
+        <li>
+            <a href="{{ url_for('home') }}">My ads</a>
+       
             {% else %}
         <li><a href="{{ url_for('register') }}">Register</a>
         <li>
@@ -24,3 +27,5 @@
     {% endfor %}
     {% block content %}{% endblock %}
 </section>
+
+
