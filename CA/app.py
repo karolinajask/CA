@@ -211,14 +211,26 @@ def create():
 @login_required
 def update():
     user_id = session.get('user_id')
-    #creating variable for connection
     conn = mysql.connection
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
-    #executing query
     cur.execute("select AdId, AdDate, Wanted, Price, Used, CarModel, CarColour from Ad where PosterID = %s" , (user_id,) )
     #fetching all records from database
     data=cur.fetchall()
-    #returning back to projectlist.html with all records from MySQL which are stored in variable data
+       
+    if request.method == 'POST':   
+        carmodel = request.form['carmodel']
+        carcolour = request.form['carcolour']
+        price = request.form['price']
+        conn = mysql.connection
+        cur = conn.cursor()
+        error = None
+
+
+        #cur.execute(  "INSERT INTO Ad (CarModel,CarColour, Price) VALUES (%s, %s, %s)",
+     #                   (carmodel, carcolour,price), 
+      #                   "WHERE AdId = %s", (data.AdId[0]),
+        #            )
+       # conn.commit()
 
     return render_template('auth/update.html',data=data)
 #################################################################

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}Edit your Ad of ID {% for item in data %} {{ item.AdId}} {% endfor %}{% endblock %}</h1>
+
 {% endblock %}
 
 {% block content %}
@@ -17,6 +17,7 @@
     <label for="carused">No</label>
     <br>-->
     {% for item in data %}
+    <h1>Edit your Ad of ID {{ item.AdId}}</h1>
     <label for="carmodel">Car Model</label>
     <input name="carmodel" id="carmodel" value="{{ item.CarModel }}" required>
 
@@ -32,3 +33,4 @@
 <hr>
 <p>delete</p>
 {% endblock %}
+
