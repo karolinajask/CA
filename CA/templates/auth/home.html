@@ -27,6 +27,7 @@
                     <td>Used Car</td>
                 </tr>
                 {% for item in data %}
+
                 <tr>
                     <td>{{item.AdId}}</td>
                     <td>{{item.AdDate}}</td>
@@ -43,6 +44,8 @@
                     {% elif item.Used == 'N' %}
                     <td> New</td>
                     {% endif %}
+                    <td><a class="btn-success">Edit</a></td>
+                    <td><a class="btn-danger">Delete</a></td>
                 </tr>
                 {% endfor %}
 

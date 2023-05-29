@@ -215,7 +215,7 @@ def update():
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
     cur.execute("select AdId, AdDate, Wanted, Price, Used, CarModel, CarColour from Ad where PosterID = %s" , (user_id,) )
     #fetching all records from database
-    data=cur.fetchall()
+    data=cur.fetchall()  
        
     if request.method == 'POST':   
         carmodel = request.form['carmodel']
@@ -226,11 +226,11 @@ def update():
         error = None
 
 
-        #cur.execute(  "INSERT INTO Ad (CarModel,CarColour, Price) VALUES (%s, %s, %s)",
-     #                   (carmodel, carcolour,price), 
-      #                   "WHERE AdId = %s", (data.AdId[0]),
-        #            )
-       # conn.commit()
+        cur.execute(  "INSERT INTO Ad (CarModel,CarColour, Price) VALUES (%s, %s, %s)",
+                        (carmodel, carcolour,price), 
+                         "WHERE AdId = %s", (data.AdId[0]),
+                    )
+        conn.commit()
 
     return render_template('auth/update.html',data=data)
 #################################################################
