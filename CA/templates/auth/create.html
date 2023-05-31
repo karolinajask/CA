@@ -7,7 +7,7 @@
 {% block content %}
 <form method="post">
     <label for="carid">Car Serial Number</label>
-    <input name="carid" id="carid" value="{{ request.form['carid'] }}" required>
+    <input name="carid" id="carid" value="Leave blank if you are a buyer" required>
 
     <label for="carused">Is the Car used</label>
     <input type="radio" id="usedcar" name="carused" value="Y" required>

@@ -195,7 +195,7 @@ def create():
                 if usrole == "buyer":
                     cur.execute(                        
                         "INSERT INTO Ad (Wanted, CarID, PosterID, Price,Used, CarModel,CarColour) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                        ("y", carid, user_id, price, carused, carmodel, carcolour),
+                        ("y","n/a-wanted", user_id, price, carused, carmodel, carcolour),
                     )
                 conn.commit()
 
@@ -227,40 +227,58 @@ def create():
 
 @app.route('/update', methods=('GET', 'POST'))
 @login_required
-def update():
-    #ad = get_ad(id)
+def update():  
     user_id = session.get('user_id')
     conn = mysql.connection
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
-    cur.execute("select AdId, AdDate, Wanted, Price, Used, CarModel, CarColour from Ad where PosterID = %s" , ( user_id,))
+    cur.execute("select * FROM Ad where PosterID = %s" , ( user_id,))
     #fetching all records from database
     data=cur.fetchall()
-
-       
+    conn.commit()
+           
     if request.method == 'POST':   
         adid = request.form['adid']
         carmodel = request.form['carmodel']
         carcolour = request.form['carcolour']
         price = request.form['price']
         conn = mysql.connection
-        cur = conn.cursor(MySQLdb.cursors.DictCursor) 
+        cur = conn.cursor()
         error = None
 
-        cur.execute(  "UPDATE Ad SET CarModel =%s, CarColour = %s, Price = %s WHERE AdId = %s AND PosterID = %s" ,
-                        (carmodel, carcolour,price,adid,user_id,))
-
-
-    
+        cur.execute(  "UPDATE Ad SET CarModel = %s, CarColour = %s, Price = %s WHERE AdId = %s" ,
+                        (carmodel, carcolour,price,adid,))    
+        
         conn.commit()
         return redirect(url_for('home'))
 
     return render_template('auth/update.html',data=data)
 #################################################################
 
-@app.route('/delete', methods=('POST',))
+@app.route('/delete', methods=('GET', 'POST'))
 @login_required
 def delete():
-     return redirect(url_for('home'))
+    user_id = session.get('user_id')
+    conn = mysql.connection
+    cur = conn.cursor(MySQLdb.cursors.DictCursor) 
+    cur.execute("select * FROM Ad where PosterID = %s" , ( user_id,))
+    #fetching all records from database
+    data=cur.fetchall()
+    conn.commit()
+           
+    if request.method == 'POST':   
+        adid = request.form['adid']
+        conn = mysql.connection
+        cur = conn.cursor()
+        error = None
+
+        cur.execute(  "DELETE from Ad WHERE AdId = %s" ,
+                        (adid,))   
+        print(adid)
+        
+        conn.commit()
+
+        return redirect(url_for('home'))
+    return render_template('auth/delete.html',data=data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='8080') #Run the flask app at port 8080
