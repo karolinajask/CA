@@ -24,13 +24,13 @@
     <input name="adid" id="adid" value="{{ item.AdId }}" readonly>
 
     <label for="carmodel">Car Model</label>
-    <input name="carmodel" id="carmodel" value="{{ item.CarModel }}" disabled>
+    <input name="carmodel" id="carmodel" value="{{ item.CarModel }}" readonly>
 
     <label for="carcolour">Car Colour</label>
-    <input name="carcolour" id="carcolour" value="{{ item.CarColour }}" disabled>
+    <input name="carcolour" id="carcolour" value="{{ item.CarColour }}" readonly>
 
     <label for="price">Price in EUR</label>
-    <input name="price" type="number" id="price" value="{{item.Price}}" disabled>
+    <input name="price" type="number" id="price" value="{{item.Price}}" readonly>
     <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
 
 </form>

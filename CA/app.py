@@ -129,6 +129,12 @@ def load_logged_in_user():
             'SELECT UserEmail FROM User WHERE UserEmail = %s', (user_id,)
         )
         g.user = cur.fetchone()
+        cur.execute(
+            'SELECT UserFirstName FROM User WHERE UserEmail = %s', (user_id,)
+        )
+        g.name = cur.fetchone()
+        
+
       
 @app.route('/logout')
 def logout():

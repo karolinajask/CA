@@ -7,8 +7,8 @@
 <nav>
     <h1>KJ Cars</h1>
     <ul>
-        {% if g.user %}
-        <li><span>{{ g.user['UserFirstName'] }}</span>
+        {% if g.name %}
+        <li><span>Hi {{ g.name[0] }}</span>
         <li>
             <a href="{{ url_for('logout') }}">Log Out</a>
         <li>
