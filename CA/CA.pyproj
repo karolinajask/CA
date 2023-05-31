@@ -37,6 +37,7 @@
     <Content Include="static\style.css" />
     <Content Include="templates\auth\create.html" />
     <Content Include="templates\auth\delete.html" />
+    <Content Include="templates\auth\likes.html" />
     <Content Include="templates\auth\update.html" />
     <Content Include="templates\base.html" />
     <Content Include="templates\auth\home.html" />

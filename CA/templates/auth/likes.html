@@ -7,9 +7,9 @@
 {% block content %}
 
 {% for item in data %}
-<form action="{{ url_for('delete') }}" method="post">
+<form action="{{url_for('likes')}}" method="post">
 
-    <h1>Delete your Ad of ID {{ item.AdId}}</h1>
+    <h1>Show your interest for Ad ID {{ item.AdId}}</h1>
 
     <label for="adid">Ad ID</label>
     <input name="adid" id="adid" value="{{ item.AdId }}" readonly>
@@ -22,14 +22,9 @@
 
     <label for="price">Price in EUR</label>
     <input name="price" type="number" id="price" value="{{item.Price}}" readonly>
-    <input type="submit" value="Delete" onclick="return confirm  ('Are you sure?');">
+    <input type="submit" value="Like">
 
 </form>
-
-    {% endfor %}
-    <hr>
-    <p>delete</p>
-    {% endblock %}
-
-
-
+{% endfor %}
+<hr>
+{% endblock %}

@@ -21,6 +21,7 @@
                     <td>Used Car</td>
                     <td>Edit</td>
                     <td>Delete</td>
+                    <td>Like</td>
                 </tr>
                 {% for item in data %}
                 
@@ -45,6 +46,10 @@
                     </td>
                     <td>
                         <a href="{{ url_for('delete') }}"><i class="far fa-trash-alt"></i></a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('likes') }}"><i class="far fa-heart"></i></a>
+                        
                     </td>
                 </tr>
                 {% endfor %}

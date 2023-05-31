@@ -36,7 +36,6 @@ def index():
     return render_template("index.html",data=data)
 
 
-
 @app.route('/register', methods=('GET', 'POST'))
 def register():    	
     if request.method == 'POST':
@@ -152,6 +151,7 @@ def login_required(view):
     return wrapped_view
 
 @app.route("/home")
+@login_required
 def home():
     user_id = session.get('user_id')
     #creating variable for connection
@@ -163,6 +163,36 @@ def home():
     data=cur.fetchall()
     #returning back to projectlist.html with all records from MySQL which are stored in variable data
     return render_template('auth/home.html',data=data)
+
+########################################################################################################################################
+@app.route('/likes', methods=('GET', 'POST'))
+@login_required
+def likes():
+
+    user_id = session.get('user_id')
+    conn = mysql.connection
+    cur = conn.cursor(MySQLdb.cursors.DictCursor) 
+    #executing query
+    cur.execute("select AdId, AdDate, Wanted, Price, Used, CarModel, CarColour from Ad ")
+    #fetching all records from database
+    data=cur.fetchall()
+    if request.method == 'POST':
+        adid = request.form['adid']
+        conn = mysql.connection
+        cur = conn.cursor() 
+
+        cur.execute(
+                    "INSERT INTO Likes (AdId, UserEmail) VALUES (%s, %s)",
+                    (adid, user_id),
+        )
+        conn.commit()
+        cur.execute("SELECT * FROM Likes")
+        a=cur.fetchall()
+        print(a)
+
+        return redirect(url_for('index'))
+    return render_template('auth/likes.html',data=data)
+
 
 @app.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -212,24 +242,6 @@ def create():
     return render_template('auth/create.html')
 
 #################################################################
-
-#def get_ad(id):
-    #id = 2
-    #user_id = session.get('user_id')
-    #conn = mysql.connection
-    #cur = conn.cursor() 
-    #cur = conn.cursor() 
-    #cur.execute("select * from Ad where AdId = %s AND PosterID = %s" , ( id, user_id,))
-    #fetching all records from database
-
-    #ad = cur.fetchone()
-    #print(ad)
-     
-
-    #if ad is None:
-    #    return("Post id {id} doesn't exist.")
-
-    #return ad
 
 @app.route('/update', methods=('GET', 'POST'))
 @login_required
@@ -285,6 +297,7 @@ def delete():
 
         return redirect(url_for('home'))
     return render_template('auth/delete.html',data=data)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='8080') #Run the flask app at port 8080

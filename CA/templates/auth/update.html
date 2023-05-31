@@ -9,15 +9,6 @@
 {% for item in data %}
 <form action="{{url_for('update')}}" method="post">
 
-
-    <!--<label for="carused">Is the Car used</label>
-    <input type="radio" id="usedcar" name="carused" value="{item.Used}}" required>
-    <label for="carused">Yes</label>
-    <br>
-    <input type="radio" id="newcar" name="carused" value="{item.Used}}" required>
-    <label for="carused">No</label>
-    <br>-->
-
     <h1>Edit your Ad of ID {{ item.AdId}}</h1>
 
     <label for="adid">Ad ID</label>
