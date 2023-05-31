@@ -4,7 +4,7 @@ It contains the definition of routes and views for the application.
 """
 import functools
 from flask import Flask
-from flask import request, current_app, g, session, flash, redirect, render_template, url_for
+from flask import request, current_app, g, session, flash, redirect, render_template, url_for, abort
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from flask_cors import CORS
@@ -207,30 +207,52 @@ def create():
 
 #################################################################
 
+#def get_ad(id):
+    #id = 2
+    #user_id = session.get('user_id')
+    #conn = mysql.connection
+    #cur = conn.cursor() 
+    #cur = conn.cursor() 
+    #cur.execute("select * from Ad where AdId = %s AND PosterID = %s" , ( id, user_id,))
+    #fetching all records from database
+
+    #ad = cur.fetchone()
+    #print(ad)
+     
+
+    #if ad is None:
+    #    return("Post id {id} doesn't exist.")
+
+    #return ad
+
 @app.route('/update', methods=('GET', 'POST'))
 @login_required
 def update():
+    #ad = get_ad(id)
     user_id = session.get('user_id')
     conn = mysql.connection
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
-    cur.execute("select AdId, AdDate, Wanted, Price, Used, CarModel, CarColour from Ad where PosterID = %s" , (user_id,) )
+    cur.execute("select AdId, AdDate, Wanted, Price, Used, CarModel, CarColour from Ad where PosterID = %s" , ( user_id,))
     #fetching all records from database
-    data=cur.fetchall()  
+    data=cur.fetchall()
+
        
     if request.method == 'POST':   
+        adid = request.form['adid']
         carmodel = request.form['carmodel']
         carcolour = request.form['carcolour']
         price = request.form['price']
         conn = mysql.connection
-        cur = conn.cursor()
+        cur = conn.cursor(MySQLdb.cursors.DictCursor) 
         error = None
 
+        cur.execute(  "UPDATE Ad SET CarModel =%s, CarColour = %s, Price = %s WHERE AdId = %s AND PosterID = %s" ,
+                        (carmodel, carcolour,price,adid,user_id,))
 
-        cur.execute(  "INSERT INTO Ad (CarModel,CarColour, Price) VALUES (%s, %s, %s)",
-                        (carmodel, carcolour,price), 
-                         "WHERE AdId = %s", (data.AdId[0]),
-                    )
+
+    
         conn.commit()
+        return redirect(url_for('home'))
 
     return render_template('auth/update.html',data=data)
 #################################################################

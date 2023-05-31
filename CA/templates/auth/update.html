@@ -18,6 +18,10 @@
     <br>-->
     {% for item in data %}
     <h1>Edit your Ad of ID {{ item.AdId}}</h1>
+
+    <label for="adid">Ad ID</label>
+    <input name="adid" id="adid" value="{{ item.AdId }}" required>
+
     <label for="carmodel">Car Model</label>
     <input name="carmodel" id="carmodel" value="{{ item.CarModel }}" required>
 

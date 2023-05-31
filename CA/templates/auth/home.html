@@ -2,16 +2,10 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}Posts{% endblock %}</h1>
-  {% if g.user %}
-<a class="action" href="{{ url_for('create') }}">New</a>
-<a class="action" href="{{ url_for('update') }}">Edit your ads</a>
-<a class="action" href="{{ url_for('index') }}">All ads</a>
-  {% endif %}
+<h1>{% block title %}Below are the ads you posted{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-<h1>Below are ads you posted</h1>
 <!--https://www.krazyprogrammer.com/2020/12/fetch-data-from-mysql-using-flask-and.html-->
 <table border="0" style="box-shadow:1px 1px 10px white" width="70%" height="70%" align="center">
     <tr>
@@ -25,9 +19,11 @@
                     <td>Colour</td>
                     <td>For Sale/Wanted</td>
                     <td>Used Car</td>
+                    <td>Edit</td>
+                    <td>Delete</td>
                 </tr>
                 {% for item in data %}
-
+                
                 <tr>
                     <td>{{item.AdId}}</td>
                     <td>{{item.AdDate}}</td>
@@ -44,8 +40,12 @@
                     {% elif item.Used == 'N' %}
                     <td> New</td>
                     {% endif %}
-                    <td><a class="btn-success">Edit</a></td>
-                    <td><a class="btn-danger">Delete</a></td>
+                    <td>
+                        <a href="{{ url_for('update') }}"><i class="far fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('update') }}"><i class="far fa-trash-alt"></i></a>
+                    </td>
                 </tr>
                 {% endfor %}
 
