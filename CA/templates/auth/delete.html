@@ -9,26 +9,31 @@
 {% for item in data %}
 <form action="{{ url_for('delete') }}" method="post">
 
-    <h1>Delete your Ad of ID {{ item.AdId}}</h1>
+    <h2>Delete your Ad of ID {{ item.AdId}}</h2>
 
-    <label for="adid">Ad ID</label>
-    <input name="adid" id="adid" value="{{ item.AdId }}" readonly>
+    <div class="mb-3">
+        <label for="adid" class="form-label">Ad ID</label>
+        <input name="adid" class="form-control" id="adid" value="{{ item.AdId }}" readonly>
+    </div>
 
-    <label for="carmodel">Car Model</label>
-    <input name="carmodel" id="carmodel" value="{{ item.CarModel }}" readonly>
+    <div class="mb-3">
+        <label for="carmodel" class="form-label">Car Model</label>
+        <input name="carmodel" class="form-control" id="carmodel" value="{{ item.CarModel }}" readonly>
+    </div>
 
-    <label for="carcolour">Car Colour</label>
-    <input name="carcolour" id="carcolour" value="{{ item.CarColour }}" readonly>
+    <div class="mb-3">
+        <label for="carcolour" class="form-label">Car Colour</label>
+        <input name="carcolour" class="form-control" id="carcolour" value="{{ item.CarColour }}" readonly>
+    </div>
 
-    <label for="price">Price in EUR</label>
-    <input name="price" type="number" id="price" value="{{item.Price}}" readonly>
-    <input type="submit" value="Delete" onclick="return confirm  ('Are you sure?');">
-
+    <div class="mb-3">
+        <label for="price" class="form-label">Price in EUR</label>
+        <input name="price" class="form-control" type="number" id="price" value="{{item.Price}}" readonly>
+        <button type="submit" class="btn btn-primary" onclick="return confirm  ('Are you sure?');">Delete</button>        
+    </div>
 </form>
 
     {% endfor %}
-    <hr>
-    <p>delete</p>
     {% endblock %}
 
 

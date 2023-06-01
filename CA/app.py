@@ -1,10 +1,6 @@
-"""
-This script runs the application using a development server.
-It contains the definition of routes and views for the application.
-"""
 import functools
 from flask import Flask
-from flask import request, current_app, g, session, flash, redirect, render_template, url_for, abort
+from flask import request, current_app, g, session, flash, redirect, render_template, url_for
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from flask_cors import CORS
@@ -18,7 +14,7 @@ CORS(app)
 app.config['MYSQL_USER'] = 'workbenchuser'
 app.config['MYSQL_PASSWORD'] = 'karolina123!'
 app.config['MYSQL_DB'] = 'ca'
-app.config['MYSQL_HOST'] = '35.228.28.162' #for now
+app.config['MYSQL_HOST'] = '35.228.28.162' 
 app.config['SECRET_KEY'] = "GDtfD^&$%@^8tgYjD"
 mysql.init_app(app)
 

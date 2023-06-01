@@ -2,60 +2,59 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}Below are the ads you posted{% endblock %}</h1>
+<h2>{% block title %}Below are the ads you posted{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
 <!--https://www.krazyprogrammer.com/2020/12/fetch-data-from-mysql-using-flask-and.html-->
-<table border="0" style="box-shadow:1px 1px 10px white" width="70%" height="70%" align="center">
-    <tr>
-        <td style="background-position:center center" valign="top" align="center">
-            <table border="0" cellpadding="8" width="100%" style="background-color:#CCCCCC">
-                <tr style="background-color:navy;color:white">
-                    <td>Ad ID</td>
-                    <td>Date Posted</td>
-                    <td>Car Model</td>
-                    <td>Price</td>
-                    <td>Colour</td>
-                    <td>For Sale/Wanted</td>
-                    <td>Used Car</td>
-                    <td>Edit</td>
-                    <td>Delete</td>
-                    <td>Like</td>
-                </tr>
-                {% for item in data %}
-                
-                <tr>
-                    <td>{{item.AdId}}</td>
-                    <td>{{item.AdDate}}</td>
-                    <td>{{item.CarModel}}</td>
-                    <td>{{item.Price}}</td>
-                    <td>{{item.CarColour}}</td>
-                    {% if item.Wanted == 'n' %}
-                    <td> For Sale </td>
-                    {% elif item.Wanted == 'y' %}
-                    <td> Wanted</td>
-                    {% endif %}
-                    {% if item.Used == 'Y' %}
-                    <td> Used </td>
-                    {% elif item.Used == 'N' %}
-                    <td> New</td>
-                    {% endif %}
-                    <td>
-                        <a href="{{ url_for('update') }}"><i class="far fa-edit"></i></a>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('delete') }}"><i class="far fa-trash-alt"></i></a>
-                    </td>
-                    <td>
-                        <a href="{{ url_for('likes') }}"><i class="far fa-heart"></i></a>
-                        
-                    </td>
-                </tr>
-                {% endfor %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Ad ID</th>
+            <th scope="col">Date Posted</th>
+            <th scope="col">Car Model</th>
+            <th scope="col">Price</th>
+            <th scope="col">Colour</th>
+            <th scope="col">For Sale/Wanted</th>
+            <th scope="col">Used Car</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+            <th scope="col">Like</th>
+        </tr>
+    </thead>
+    {% for item in data %}
+    <tbody>
+        <tr>
+            <th scope="row">{{item.AdId}}</th>
+            <td>{{item.AdDate}}</td>
+            <td>{{item.CarModel}}</td>
+            <td>{{item.Price}}</td>
+            <td>{{item.CarColour}}</td>
+            {% if item.Wanted == 'n' %}
+            <td> For Sale </td>
+            {% elif item.Wanted == 'y' %}
+            <td> Wanted</td>
+            {% endif %}
+            {% if item.Used == 'Y' %}
+            <td> Used </td>
+            {% elif item.Used == 'N' %}
+            <td> New</td>
+            {% endif %}
+            <td>
+                <a href="{{ url_for('update') }}"><i class="far fa-edit"></i></a>
+            </td>
+            <td>
+                <a href="{{ url_for('delete') }}"><i class="far fa-trash-alt"></i></a>
+            </td>
+            <td>
+                <a href="{{ url_for('likes') }}"><i class="far fa-heart"></i></a>
 
-            </table>
-        </td>
-    </tr>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+
 </table>
+
 {% endblock %}
+

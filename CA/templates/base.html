@@ -5,35 +5,45 @@
 <title>{% block title %}{% endblock %} KJ Cars</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <script src="{{ url_for('static', filename='script.js') }}"></script>
-<nav>
-    <h1>KJ Cars</h1>
+
+
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <!-- Navbar content -->
+
+    <h2>KJ Cars</h2>
     <ul>
-        {% if g.name %}
-        <li><span>Hi {{ g.name[0] }}</span>
         <li>
-            <a href="{{ url_for('logout') }}">Log Out</a>
+            <a href="{{ url_for('index') }}"><p><i class="fas fa-home fa-lg"></i> Home </p></a>
+
         <li>
-            <a href="{{ url_for('home') }}">My ads</a>
+            {% if g.user %}
         <li>
-            <a class="action" href="{{ url_for('create') }}">New</a>
+            <span id="hello">Hi {{ g.name[0] }}</span>
+
+            <a href="{{ url_for('create') }}"><p><i class="fas fa-plus-circle fa-lg"></i> New Ad </p></a>
         <li>
-            <a class="action" href="{{ url_for('index') }}">All ads</a>
+            <a href="{{ url_for('home') }}"><p><i class="fas fa-edit fa-lg"></i> Edit your ads </p></a>
+        <li>
+            <a href="{{ url_for('logout') }}"><p><i class="fas fa-sign-out-alt fa-lg"></i> Log Out </p></a>
+        <li>
 
             {% else %}
-<li><a href="{{ url_for('register') }}">Register</a>
+        <li><a href="{{ url_for('register') }}"><p><i class="fas fa-user-plus fa-lg"></i> Register </p></a>
         <li>
-            <a href="{{ url_for('login') }}">Log In</a>
+            <a href="{{ url_for('login') }}"><p><i class="fas fa-user fa-lg"></i> Log In </p></a>
             {% endif %}
     </ul>
 </nav>
-<section class="content">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %}
-    {% block content %}{% endblock %}
-</section>
+        <section class="content">
+            <header>
+                {% block header %}{% endblock %}
+            </header>
+            {% for message in get_flashed_messages() %}
+            <div class="flash">{{ message }}</div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </section>
+
+
 
 

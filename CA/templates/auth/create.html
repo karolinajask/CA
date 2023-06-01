@@ -1,33 +1,41 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1>{% block title %}New  Ad{% endblock %}</h1>
+<h2>{% block title %}New  Ad{% endblock %}</h2>
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    <label for="carid">Car Serial Number</label>
-    <input name="carid" id="carid" value="Leave blank if you are a buyer" required>
+<form form action="{{url_for('update')}}" method="post">
+    <div class="mb-3">
+        <label for="carid" class="form-label">Car Serial Number</label>
+        <input name="carid" class="form-control" id="carid" value="Leave blank if you are a buyer" required>
+    </div>
 
-    <label for="carused">Is the Car used</label>
-    <input type="radio" id="usedcar" name="carused" value="Y" required>
-    <label for="carused">Yes</label><br>
-    <input type="radio" id="newcar" name="carused" value="N" required>
-    <label for="carused">No</label><br>
+    <div class="mb-3">
+        <label for="carused" class="form-label">Is the Car used</label>
+        <div class="form-check">
+            <input type="radio" id="usedcar" input class="form-check-input" name="carused" value="Y" required>
+            <label for="carused" class="form-label">Yes</label><br>
+        </div>
 
+        <div class="form-check">
 
-    <label for="carmodel">Car Model</label>
-    <input name="carmodel" id="carmodel" value="{{ request.form['carmodel'] }}" required>
+                <input type="radio" id="newcar" input class="form-check-input" name="carused" value="N" required>
+                <label for="carused" class="form-label">No</label><br>
+        </div>
 
-    <label for="carcolour">Car Colour</label>
-    <input name="carcolour" id="carcolour" value="{{ request.form['carcolour'] }}" required>
+            <label for="carmodel" class="form-label">Car Model</label>
+            <input name="carmodel" id="carmodel" class="form-control" value="{{ request.form['carmodel'] }}" required>
 
-    <label for="price">Price in EUR</label>
-    <input name="price" type="number" id="price" value="{{ request.form['price'] }}" required>
+            <label for="carcolour" class="form-label">Car Colour</label>
+            <input name="carcolour" id="carcolour" class="form-control" value="{{ request.form['carcolour'] }}" required>
 
+            <label for="price" class="form-label">Price in EUR</label>
+            <input name="price" type="number" id="price" class="form-control" value="{{ request.form['price'] }}" required>
 
+            <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 
-    <input type="submit" value="Submit">
 </form>
 {% endblock %}
 
