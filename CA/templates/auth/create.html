@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<form form action="{{url_for('update')}}" method="post">
+<form form action="{{url_for('create')}}" method="post">
     <div class="mb-3">
         <label for="carid" class="form-label">Car Serial Number</label>
         <input name="carid" class="form-control" id="carid" value="Leave blank if you are a buyer" required>
