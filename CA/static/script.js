@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  /*  https://www.w3schools.com/howto/howto_js_password_validation.asp */
+  /* form validation taken from https://www.w3schools.com/howto/howto_js_password_validation.asp */
     var myInput = document.getElementById("password");
     var letter = document.getElementById("letter");
     var capital = document.getElementById("capital");

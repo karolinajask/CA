@@ -1,3 +1,5 @@
+<!-- base idea taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/ -->
+
 {% extends 'base.html' %}
 
 {% block header %}
@@ -20,20 +22,20 @@
 
         <div class="form-check">
 
-                <input type="radio" id="newcar" input class="form-check-input" name="carused" value="N" required>
-                <label for="carused" class="form-label">No</label><br>
+            <input type="radio" id="newcar" input class="form-check-input" name="carused" value="N" required>
+            <label for="carused" class="form-label">No</label><br>
         </div>
 
-            <label for="carmodel" class="form-label">Car Model</label>
-            <input name="carmodel" id="carmodel" class="form-control" value="{{ request.form['carmodel'] }}" required>
+        <label for="carmodel" class="form-label">Car Model</label>
+        <input name="carmodel" id="carmodel" class="form-control" value="{{ request.form['carmodel'] }}" required>
 
-            <label for="carcolour" class="form-label">Car Colour</label>
-            <input name="carcolour" id="carcolour" class="form-control" value="{{ request.form['carcolour'] }}" required>
+        <label for="carcolour" class="form-label">Car Colour</label>
+        <input name="carcolour" id="carcolour" class="form-control" value="{{ request.form['carcolour'] }}" required>
 
-            <label for="price" class="form-label">Price in EUR</label>
-            <input name="price" type="number" id="price" class="form-control" value="{{ request.form['price'] }}" required>
+        <label for="price" class="form-label">Price in EUR</label>
+        <input name="price" type="number" id="price" class="form-control" value="{{ request.form['price'] }}" required>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </div>
 
 </form>

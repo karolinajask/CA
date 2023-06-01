@@ -1,10 +1,12 @@
+<!-- base idea taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/ -->
+<!-- page available to all everyone (not just registered users) -->
 {% extends 'base.html' %}
 
 {% block header %}
 <h2>
     {% block title %}
     {% if g.user %}
-    Welcome back
+    Welcome back. These are all ads posted by our community:
     {% else %}Welcome to KJ cars. Please register to post ads and get in touch with the community. {% endif %}
     {% endblock %}
 </h2>
@@ -13,7 +15,7 @@
 
 {% block content %}
 
-<!--https://www.krazyprogrammer.com/2020/12/fetch-data-from-mysql-using-flask-and.html-->
+<!-- table idea taken from https://www.krazyprogrammer.com/2020/12/fetch-data-from-mysql-using-flask-and.html-->
 
 <table class="table table-hover">
     <thead>

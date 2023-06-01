@@ -10,7 +10,7 @@ mysql = MySQL()
 app = Flask(__name__)
 CORS(app)
 # My SQL Instance configurations
-# Change the HOST IP and Password to match your instance configurations
+# taken from Moodle
 app.config['MYSQL_USER'] = 'workbenchuser'
 app.config['MYSQL_PASSWORD'] = 'karolina123!'
 app.config['MYSQL_DB'] = 'ca'
@@ -21,6 +21,7 @@ mysql.init_app(app)
 
 @app.route('/', methods=('GET','POST'))
 def index():
+    # taken from https://www.krazyprogrammer.com/2020/12/fetch-data-from-mysql-using-flask-and.htm
     #creating variable for connection
     conn = mysql.connection
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
@@ -33,14 +34,14 @@ def index():
 
 
 @app.route('/register', methods=('GET', 'POST'))
-def register():    	
+def register():   
+    # taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/
     if request.method == 'POST':
         useremail = request.form['useremail']
         password = request.form['password']
         userfirstname = request.form['userfirstname']
         userlastname = request.form['userlastname']
         userrole = request.form['userrole']
-        #cur = mysql.connection.cursor()
         conn = mysql.connection
         cur = conn.cursor()  
         error = None
@@ -72,8 +73,6 @@ def register():
 
     return render_template('auth/register.html')
 
-################################
-
 @app.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -88,7 +87,7 @@ def login():
         if p is None:
             error = 'Incorrect username.'
 
-        cur.execute('select UserPassword, UserEmail from User where UserEmail = %s', [useremail]) #https://stackoverflow.com/questions/69477885/check-password-hash-is-not-working-in-flask-mysql
+        cur.execute('select UserPassword, UserEmail from User where UserEmail = %s', [useremail]) # taken from https://stackoverflow.com/questions/69477885/check-password-hash-is-not-working-in-flask-mysql
         data = cur.fetchall()
         for row in data:
             hashed_password = ("%s" % (row[0]))
@@ -96,10 +95,8 @@ def login():
 
         if len(data) > 0:
             if check_password_hash(hashed_password,password):
-
-                #return 'logged in successfully'
                 
-                session.clear()
+                session.clear() # taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/
                 session['user_id'] = p[0]
                 return redirect(url_for("home"))
 
@@ -111,8 +108,8 @@ def login():
     return render_template('auth/login.html')
 
 
-@app.before_request
-def load_logged_in_user():
+@app.before_request 
+def load_logged_in_user(): # taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/
     conn = mysql.connection
     cur = conn.cursor()
     user_id = session.get('user_id')
@@ -131,12 +128,12 @@ def load_logged_in_user():
         
 
       
-@app.route('/logout')
+@app.route('/logout') #taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
-def login_required(view):
+def login_required(view): #taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
@@ -148,7 +145,7 @@ def login_required(view):
 
 @app.route("/home")
 @login_required
-def home():
+def home(): # based on index view
     user_id = session.get('user_id')
     #creating variable for connection
     conn = mysql.connection
@@ -160,7 +157,6 @@ def home():
     #returning back to projectlist.html with all records from MySQL which are stored in variable data
     return render_template('auth/home.html',data=data)
 
-########################################################################################################################################
 @app.route('/likes', methods=('GET', 'POST'))
 @login_required
 def likes():
@@ -237,11 +233,10 @@ def create():
 
     return render_template('auth/create.html')
 
-#################################################################
 
 @app.route('/update', methods=('GET', 'POST'))
 @login_required
-def update():  
+def update():  # based on home view
     user_id = session.get('user_id')
     conn = mysql.connection
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
@@ -266,11 +261,11 @@ def update():
         return redirect(url_for('home'))
 
     return render_template('auth/update.html',data=data)
-#################################################################
+
 
 @app.route('/delete', methods=('GET', 'POST'))
 @login_required
-def delete():
+def delete(): # basd on home view
     user_id = session.get('user_id')
     conn = mysql.connection
     cur = conn.cursor(MySQLdb.cursors.DictCursor) 
@@ -293,7 +288,6 @@ def delete():
 
         return redirect(url_for('home'))
     return render_template('auth/delete.html',data=data)
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port='8080') #Run the flask app at port 8080

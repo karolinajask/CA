@@ -1,3 +1,5 @@
+<!-- base idea taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/ -->
+
 {% extends 'base.html' %}
 
 {% block header %}
@@ -29,7 +31,7 @@
     <div class="mb-3">
         <label for="price" class="form-label">Price in EUR</label>
         <input name="price" class="form-control" type="number" id="price" value="{{item.Price}}" readonly>
-        <button type="submit" class="btn btn-primary" onclick="return confirm  ('Are you sure?');">Delete</button>        
+        <button type="submit" class="btn btn-primary" onclick="return confirm  ('Are you sure?');">Delete</button>
     </div>
 </form>
 

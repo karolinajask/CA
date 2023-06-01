@@ -2,7 +2,7 @@ CREATE SCHEMA ca ;
 
 use ca;
 
-# create tables 
+#code used to create tables 
 
 DROP TABLE IF EXISTS Role;
 DROP TABLE IF EXISTS Car;

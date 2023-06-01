@@ -6,17 +6,14 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
+<!-- base idea taken from https://flask.palletsprojects.com/en/2.3.x/tutorial/ -->
 
 <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
     <!-- Navbar content -->
 
     <h2>KJ Cars</h2>
     <ul>
-        <li>
-            <a href="{{ url_for('index') }}"><p><i class="fas fa-home fa-lg"></i> Home </p></a>
-
-        <li>
-            {% if g.user %}
+        {% if g.user %}
         <li>
             <span id="hello">Hi {{ g.name[0] }}</span>
 
@@ -32,17 +29,21 @@
         <li>
             <a href="{{ url_for('login') }}"><p><i class="fas fa-user fa-lg"></i> Log In </p></a>
             {% endif %}
+        <li>
+            <a href="{{ url_for('index') }}"><p><i class="fas fa-home fa-lg"></i> Home </p></a>
+
+        <li>
     </ul>
 </nav>
-        <section class="content">
-            <header>
-                {% block header %}{% endblock %}
-            </header>
-            {% for message in get_flashed_messages() %}
-            <div class="flash">{{ message }}</div>
-            {% endfor %}
-            {% block content %}{% endblock %}
-        </section>
+<section class="content">
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+    {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+</section>
 
 
 
